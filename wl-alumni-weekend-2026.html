@@ -20,32 +20,26 @@
   --cream:      #f0e8d0;
   --teal-dark:  #1e3d3a;
 
-  /* Category colors — all clearly distinct */
-  --c-featured:   #1a5276;  /* dark steel blue  — Featured */
-  --c-featured-bg:#eaf2f8;
-  --c-featured-hd:#154360;
+  /* Category colors */
+  --c-allday:      #8E3530;
+  --c-allday-bg:   #f9ecec;
 
-  --c-class:      #1a5f3f;  /* forest green     — Class Specific */
-  --c-class-bg:   #e8f6ef;
-  --c-class-hd:   #0e3d28;
-  --c-class-card: #d4edda;  /* mint card header */
+  --c-featured:    #DBF1FA;
+  --c-featured-bg: #eef8fd;
+  --c-featured-dk: #104C60;
 
-  --c-affinity:   #6c3483;  /* purple            — Affinity */
-  --c-affinity-bg:#f5eef8;
-  --c-affinity-hd:#4a235a;
+  --c-class:       #104C60;
+  --c-class-bg:    #e5f0f4;
 
-  --c-fitness:    #1a5276;  /* teal-blue          — Fitness (same family, lighter) */
-  --c-fitness:    #0e6655;
-  --c-fitness-bg: #e8f8f5;
-  --c-fitness-hd: #0b4b3f;
+  --c-affinity:    #5494B9;
+  --c-affinity-bg: #eaf3f9;
 
-  --c-sport:      #7d3c00;  /* burnt orange       — Sporting */
-  --c-sport-bg:   #fef5e7;
-  --c-sport-hd:   #5d2e00;
+  --c-fitness:     #5C6F6F;
+  --c-fitness-bg:  #edf1f1;
 
-  --c-allday:     #4a4a4a;  /* dark gray          — All Day */
-  --c-allday-bg:  #f4f4f4;
-  --c-allday-hd:  #2c2c2c;
+  --c-sport:       #F8EACB;
+  --c-sport-bg:    #fdf6e8;
+  --c-sport-dk:    #5a3e00;
 
   /* UI */
   --text:       #1a1a1a;
@@ -130,7 +124,7 @@ body.embed-mode .page-body { padding-top: 0.75rem; }
 /* Day pills (steel blue) */
 .pill.p-day-active { background: var(--c-featured); color: #fff; border-color: var(--c-featured); font-weight: 500; }
 
-/* Class pills (green) */
+/* Class pills (deep teal) */
 .pill.p-class-active { background: var(--c-class); color: #fff; border-color: var(--c-class); font-weight: 500; }
 
 /* ═══════════════════════════════════════
@@ -182,12 +176,22 @@ body.embed-mode .page-body { padding-top: 0.75rem; }
   line-height: 1.3; flex: 1;
 }
 /* header colors by category */
-.hd-featured { background: var(--c-featured); }
+.hd-featured { background: var(--c-featured); color: var(--c-featured-dk); }
+.hd-featured .card-title { color: var(--c-featured-dk); }
+.hd-featured .card-header-dot { background: rgba(16,76,96,0.2); }
+.hd-featured .action-btn { border-color: rgba(16,76,96,0.3); background: rgba(16,76,96,0.1); color: var(--c-featured-dk); }
+.hd-featured .action-btn:hover { background: rgba(16,76,96,0.2); }
+
 .hd-class    { background: var(--c-class);    }
 .hd-affinity { background: var(--c-affinity); }
-.hd-fitness  { background: #0e6655;           }
-.hd-sport    { background: var(--c-sport);    }
+.hd-fitness  { background: var(--c-fitness);  }
 .hd-allday   { background: var(--c-allday);   }
+
+.hd-sport { background: var(--c-sport); color: var(--c-sport-dk); }
+.hd-sport .card-title { color: var(--c-sport-dk); }
+.hd-sport .card-header-dot { background: rgba(90,62,0,0.18); }
+.hd-sport .action-btn { border-color: rgba(90,62,0,0.3); background: rgba(90,62,0,0.1); color: var(--c-sport-dk); }
+.hd-sport .action-btn:hover { background: rgba(90,62,0,0.2); }
 
 /* Card body */
 .card-body { padding: 12px 16px 14px; }
@@ -212,14 +216,14 @@ body.embed-mode .page-body { padding-top: 0.75rem; }
   font-size: 13px; padding: 3px 11px; border-radius: 14px;
   font-weight: 500; text-decoration: none; display: inline-block;
 }
-.ctag-featured { background: var(--c-featured-bg); color: var(--c-featured); }
-.ctag-class    { background: var(--c-class-bg);    color: var(--c-class);    }
-.ctag-affinity { background: var(--c-affinity-bg); color: var(--c-affinity); }
-.ctag-fitness  { background: var(--c-fitness-bg);  color: #0e6655;           }
-.ctag-sport    { background: var(--c-sport-bg);    color: var(--c-sport);    }
-.ctag-allday   { background: var(--c-allday-bg);   color: var(--c-allday);   }
-.ctag-allalum  { background: var(--navy-light);    color: var(--navy);       }
-.ctag-classyr  { background: var(--c-class-bg);    color: var(--c-class);    }
+.ctag-featured { background: var(--c-featured-bg); color: var(--c-featured-dk); }
+.ctag-class    { background: var(--c-class-bg);    color: var(--c-class);       }
+.ctag-affinity { background: var(--c-affinity-bg); color: var(--c-affinity);    }
+.ctag-fitness  { background: var(--c-fitness-bg);  color: var(--c-fitness);     }
+.ctag-sport    { background: var(--c-sport-bg);    color: var(--c-sport-dk);    }
+.ctag-allday   { background: var(--c-allday-bg);   color: var(--c-allday);      }
+.ctag-allalum  { background: var(--navy-light);    color: var(--navy);          }
+.ctag-classyr  { background: var(--c-class-bg);    color: var(--c-class);       }
 .ctag-sub      { background: #fef9ec; color: #7a5500; }
 
 /* card-level admin actions */
@@ -445,14 +449,13 @@ body.embed-mode .page-body { padding-top: 0.75rem; }
     </div>
   </div>
 
-  <!-- LEGEND -->
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:var(--c-featured)"></div>Featured</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--c-class)"></div>Class specific</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--c-affinity)"></div>Affinity</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#0e6655"></div>Fitness</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--c-sport)"></div>Sporting</div>
-    <div class="legend-item"><div class="legend-dot" style="background:var(--c-allday)"></div>All day</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#DBF1FA; border:1px solid #aad4e8;"></div>Featured</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#104C60"></div>Class specific</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#5494B9"></div>Affinity</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#5C6F6F"></div>Fitness</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#F8EACB; border:1px solid #d4c090;"></div>Sporting</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#8E3530"></div>All day</div>
   </div>
 
   <!-- SCHEDULE -->
