@@ -60,36 +60,28 @@ body { font-family: var(--sans); background: var(--bg); color: var(--text); min-
    HEADER
 ═══════════════════════════════════════ */
 .site-header {
-  background: var(--sky); color: var(--navy);
-  border-bottom: 4px solid var(--crimson);
+  background: #8bbfcf;
+  border-bottom: none;
   overflow: hidden; position: relative;
-}
-.site-header::before {
-  content: ''; position: absolute; inset: 0;
-  background: repeating-linear-gradient(180deg,
-    rgba(255,255,255,0.07) 0, rgba(255,255,255,0.07) 1px,
-    transparent 1px, transparent 18px);
-  pointer-events: none;
 }
 .header-inner { padding: 2.5rem 1.5rem 2rem; position: relative; z-index: 1; text-align: center; }
 .header-eyebrow { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal-dark); margin-bottom: 10px; font-weight: 500; }
 .header-title { font-family: var(--serif); font-size: clamp(1.7rem, 5vw, 2.6rem); font-weight: normal; color: var(--navy); margin-bottom: 6px; line-height: 1.15; }
 .header-title strong { font-family: var(--sans); font-weight: 700; }
-.header-dates { font-size: 15px; color: var(--teal-dark); margin-bottom: 8px; }
-.header-classes { font-size: 13px; color: var(--navy-mid); font-style: italic; opacity: 0.78; }
-.colonnade-strip {
-  height: 10px;
-  background: repeating-linear-gradient(90deg,
-    var(--cream) 0, var(--cream) 12px,
-    var(--crimson) 12px, var(--crimson) 16px);
-  opacity: 0.55;
-}
+.header-dates { font-size: 15px; color: var(--navy-mid); margin-bottom: 8px; }
+.header-classes { font-size: 13px; color: var(--navy-mid); font-style: italic; opacity: 0.85; }
+.colonnade-strip { display: none; }
 
 /* embed mode */
 body.embed-mode .site-header { display: none; }
 body.embed-mode .admin-toggle-wrap { display: none; }
 body.embed-mode .edit-hint { display: none !important; }
 body.embed-mode .page-body { padding-top: 0.75rem; }
+
+/* public mode — clean view, no admin */
+body.public-mode .admin-toggle-wrap { display: none; }
+body.public-mode .edit-hint { display: none !important; }
+body.public-mode .admin-panel { display: none !important; }
 
 /* ═══════════════════════════════════════
    LAYOUT
@@ -601,6 +593,7 @@ function getParam(k) { return new URLSearchParams(window.location.search).get(k)
 
 function init() {
   if (getParam('embed') === '1') document.body.classList.add('embed-mode');
+  if (getParam('public') === '1') document.body.classList.add('public-mode');
   activeDay   = getParam('day')   || 'all';
   activeClass = getParam('class') || 'all';
   buildClassChecks();
