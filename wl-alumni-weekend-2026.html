@@ -119,6 +119,14 @@ body.public-mode .admin-panel { display: none !important; }
 /* Class pills (deep teal) */
 .pill.p-class-active { background: var(--c-class); color: #fff; border-color: var(--c-class); font-weight: 500; }
 
+/* Category pills — each uses its own brand color */
+.pill.p-cat-featured { background: var(--c-featured-dk); color: #fff; border-color: var(--c-featured-dk); font-weight: 500; }
+.pill.p-cat-class    { background: var(--c-class);       color: #fff; border-color: var(--c-class);       font-weight: 500; }
+.pill.p-cat-affinity { background: var(--c-affinity);    color: #fff; border-color: var(--c-affinity);    font-weight: 500; }
+.pill.p-cat-fitness  { background: var(--c-fitness);     color: #fff; border-color: var(--c-fitness);     font-weight: 500; }
+.pill.p-cat-sport    { background: var(--c-sport-dk);    color: #fff; border-color: var(--c-sport-dk);    font-weight: 500; }
+.pill.p-cat-allday   { background: var(--c-allday);      color: #fff; border-color: var(--c-allday);      font-weight: 500; }
+
 /* ═══════════════════════════════════════
    LEGEND
 ═══════════════════════════════════════ */
@@ -440,6 +448,11 @@ body.public-mode .admin-panel { display: none !important; }
       <span class="filter-row-label">Class</span>
       <div class="pill-group" id="classPills"></div>
     </div>
+    <!-- Category filter -->
+    <div class="filter-row">
+      <span class="filter-row-label">Type</span>
+      <div class="pill-group" id="catPills"></div>
+    </div>
   </div>
 
   <div class="legend">
@@ -449,7 +462,6 @@ body.public-mode .admin-panel { display: none !important; }
     <div class="legend-item"><div class="legend-dot" style="background:#5C6F6F"></div>Fitness</div>
     <div class="legend-item"><div class="legend-dot" style="background:#F8EACB; border:1px solid #d4c090;"></div>Sporting</div>
     <div class="legend-item"><div class="legend-dot" style="background:#8E3530"></div>All day</div>
-    <div class="legend-item" style="margin-left:auto; font-size:12px; color:var(--text-muted); font-style:italic;">Tags: <span style="background:#dde8ee;color:#1a2e3b;padding:1px 7px;border-radius:8px;font-style:normal;font-size:11px;font-weight:500;">All alumni</span> = on all class schedules &nbsp;·&nbsp; <span style="background:#e8f4f0;color:#2a5c54;padding:1px 7px;border-radius:8px;font-style:normal;font-size:11px;font-weight:500;">Open to all</span> = main schedule only</div>
   </div>
 
   <!-- SCHEDULE -->
@@ -589,6 +601,7 @@ let events = [
 
 let activeDay   = 'all';
 let activeClass = 'all';
+let activeCat   = 'all';
 let nextId = 90;
 
 function getParam(k) { return new URLSearchParams(window.location.search).get(k); }
@@ -598,9 +611,11 @@ function init() {
   if (getParam('public') === '1') document.body.classList.add('public-mode');
   activeDay   = getParam('day')   || 'all';
   activeClass = getParam('class') || 'all';
+  activeCat   = getParam('cat')   || 'all';
   buildClassChecks();
   buildDayPills();
   buildClassPills();
+  buildCatPills();
   buildEmbedCodes();
   render();
 }
@@ -629,6 +644,23 @@ function buildClassPills() {
   });
 }
 
+function buildCatPills() {
+  const c = document.getElementById('catPills');
+  c.innerHTML = '';
+  c.appendChild(mkPill('All types', activeCat === 'all', 'p-all-active', () => setCat('all')));
+  const cats = [
+    { key:'featured', label:'Featured',       activeClass:'p-cat-featured' },
+    { key:'class',    label:'Class Specific',  activeClass:'p-cat-class'    },
+    { key:'affinity', label:'Affinity',        activeClass:'p-cat-affinity' },
+    { key:'fitness',  label:'Fitness',         activeClass:'p-cat-fitness'  },
+    { key:'sport',    label:'Sporting Events', activeClass:'p-cat-sport'    },
+    { key:'allday',   label:'All Day',         activeClass:'p-cat-allday'   },
+  ];
+  cats.forEach(({ key, label, activeClass: ac }) => {
+    c.appendChild(mkPill(label, activeCat === key, ac, () => setCat(key)));
+  });
+}
+
 function mkPill(label, active, activeClass, fn) {
   const btn = document.createElement('button');
   btn.className = 'pill' + (active ? ' ' + activeClass : '');
@@ -653,19 +685,27 @@ function setClass(cls) {
   buildClassPills(); render();
 }
 
+function setCat(cat) {
+  activeCat = cat;
+  const url = new URL(window.location.href);
+  url.searchParams.set('cat', cat);
+  window.history.replaceState({}, '', url);
+  buildCatPills(); render();
+}
+
 /* ── FILTER ── */
 function visibleEvents() {
   return events.filter(e => {
     const dayOk = activeDay === 'all' || e.date === activeDay;
+    const catOk = activeCat === 'all' || e.cat === activeCat;
     let classOk;
     if (activeClass === 'all') {
-      // All events view — show everything
       classOk = true;
     } else {
       // Class filter — only show All Alumni or that specific class; NOT Open to All
       classOk = e.classes.includes('All Alumni') || e.classes.includes(activeClass);
     }
-    return dayOk && classOk;
+    return dayOk && catOk && classOk;
   });
 }
 
