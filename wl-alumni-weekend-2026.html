@@ -418,7 +418,7 @@ body.public-mode .admin-panel { display: none !important; }
           <option value="affinity">Affinity (A)</option>
           <option value="fitness">Fitness (T)</option>
           <option value="sport">Sporting Event (S)</option>
-          <option value="allday">All Day (L)</option>
+          <option value="allday">Other</option>
         </select>
       </div>
       <div class="form-field"><label>Sub-label / note (optional)</label><input id="f-type" placeholder="e.g. By Invitation Only" /></div>
@@ -461,7 +461,7 @@ body.public-mode .admin-panel { display: none !important; }
     <div class="legend-item"><div class="legend-dot" style="background:#5494B9"></div>Affinity</div>
     <div class="legend-item"><div class="legend-dot" style="background:#5C6F6F"></div>Fitness</div>
     <div class="legend-item"><div class="legend-dot" style="background:#F8EACB; border:1px solid #d4c090;"></div>Sporting</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#8E3530"></div>All day</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#8E3530"></div>Other</div>
   </div>
 
   <!-- SCHEDULE -->
@@ -500,7 +500,7 @@ const CAT = {
   affinity: { label:'Affinity',       hd:'hd-affinity', tag:'ctag-affinity' },
   fitness:  { label:'Fitness',        hd:'hd-fitness',  tag:'ctag-fitness'  },
   sport:    { label:'Sporting Event', hd:'hd-sport',    tag:'ctag-sport'    },
-  allday:   { label:'All Day',        hd:'hd-allday',   tag:'ctag-allday'   },
+  allday:   { label:'Other',        hd:'hd-allday',   tag:'ctag-allday'   },
 };
 
 let events = [
@@ -536,7 +536,7 @@ let events = [
   {id:26, title:'W&L University Library Hours',                            location:'Leyburn Library',                                         date:'Friday, May 1',       start:'7:30 AM', end:'8:30 PM',  cat:'allday',   classes:['Campus-Wide'], type:'', desc:''},
   {id:27, title:'CrossFit Foundations',                                    location:'Duchossois Athletic and Recreation Center',                date:'Friday, May 1',       start:'8:30 AM', end:'9:30 AM',  cat:'fitness',  classes:['Campus-Wide'], type:'', desc:'Join W&L\'s affiliate Liberty Hall CrossFit for a beginner-friendly Foundations class — a great way to get moving while connecting with Generals past and present. DARC 103, ground floor across from the elevator. Registration required.'},
   {id:28, title:'Reunion Check-In / Registration',                         location:'Hotchkiss Alumni House',                                  date:'Friday, May 1',       start:'8:30 AM', end:'6:00 PM',  cat:'featured', classes:['Campus-Wide'], type:'', desc:''},
-  {id:29, title:"Alumni Coffee & Conversation: Class of '81 Lawyers Gathering", location:'Mason Taylor New Room, Payne Hall',                 date:'Friday, May 1',       start:'9:00 AM', end:'11:00 AM', cat:'class',    classes:['1981'],       type:'', desc:'Members of the Class of \'81 who are practicing or retired lawyers are invited to gather for coffee and conversation. The first hour offers time to reconnect; the second hour current law students and staff will join for an informal meet-and-greet. Questions, contact Chip Nunley, cnunley@hunton.com. Registration not required.'81 who are practicing or retired lawyers are invited to gather for coffee and conversation. The first hour offers time for alumni to reconnect; during the second hour, current law students and law school staff will join for an informal meet-and-greet. Registration not required.'},
+  {id:29, title:"Alumni Coffee & Conversation: Class of '81 Lawyers Gathering", location:'Mason Taylor New Room, Payne Hall',                 date:'Friday, May 1',       start:'9:00 AM', end:'11:00 AM', cat:'class',    classes:['1981'],       type:'', desc:'Members of the Class of \'81 who are practicing or retired lawyers are invited to gather for coffee and conversation. The first hour offers time to reconnect; the second hour current law students and staff will join for an informal meet-and-greet. Questions, contact Chip Nunley, cnunley@hunton.com. Registration not required.'},
   {id:30, title:'W&L University Library 250th Birthday Celebration Exhibits', location:'Leyburn Library',                                     date:'Friday, May 1',       start:'10:00 AM',end:'2:00 PM',  cat:'featured', classes:['Campus-Wide'], type:'', desc:'Stop by Leyburn Library to celebrate our 250th Birthday. From rare and treasured artifacts in our collections to the innovative work of today\'s students and faculty, the W&L Library has been a beacon for curiosity and scholarship for generations. Make a birthday card, learn about the library\'s rich history, and visit the newly renovated Tom Wolfe Reading Room. For additional information contact library250@wlu.edu.'},
   {id:31, title:'W&L Special Collections and Archives Hours',              location:'Leyburn Library',                                         date:'Friday, May 1',       start:'10:00 AM',end:'4:00 PM',  cat:'allday',   classes:['Campus-Wide'], type:'', desc:''},
   {id:32, title:'Alumni Picnic',                                           location:'Cannan Green',                                            date:'Friday, May 1',       start:'11:30 AM',end:'1:30 PM',  cat:'featured', classes:['All Alumni'], type:'', desc:'All alumni, students, faculty and guests are invited to gather for lunch. Reunionists — look for your class sign to sit with your classmates!'},
@@ -567,7 +567,7 @@ let events = [
   {id:57, title:'Class of 2011 Reception and Dinner',                     location:'Northen Auditorium and Courtyard',                        date:'Friday, May 1',       start:'6:30 PM', end:'9:30 PM',  cat:'class',    classes:['2011'],       type:'', desc:''},
   {id:58, title:'Class of 1976 Reception and Dinner',                     location:'Evans Hall',                                              date:'Friday, May 1',       start:'6:30 PM', end:'10:00 PM', cat:'class',    classes:['1976'],       type:'', desc:''},
   {id:59, title:'Class of 2001 Reception and Dinner',                     location:'Cannan Green',                                            date:'Friday, May 1',       start:'6:30 PM', end:'11:00 PM', cat:'class',    classes:['2001'],       type:'', desc:''},
-  {id:60, title:'25th Reunion Class and Committee Photos',                 location:'Cannan Green',                                            date:'Friday, May 1',       start:'7:00 PM', end:'7:15 PM',  cat:'class',    classes:['2001'],       type:'', desc:'Don\'t miss the 25th Reunion Class Photo. Committee members will also have their picture taken at this time. Gather at 7:00 p.m. SHARP along the Duchossois Athletic and Recreation Center stairs facing Cannan Green.'t miss the 25th Reunion Class Photo. Committee members will also have their picture taken at this time.'},
+  {id:60, title:'25th Reunion Class and Committee Photos',                 location:'Cannan Green',                                            date:'Friday, May 1',       start:'7:00 PM', end:'7:15 PM',  cat:'class',    classes:['2001'],       type:'', desc:'Don\'t miss the 25th Reunion Class Photo. Committee members will also have their picture taken at this time. Gather at 7:00 p.m. SHARP along the Duchossois Athletic and Recreation Center stairs facing Cannan Green.'},
   // ── SATURDAY MAY 2 ──
   {id:61, title:'Baseball vs Opening Series',                              location:"Cap'n Dick Smith Field",                                  date:'Saturday, May 2',     start:'TBA',     end:'',         cat:'sport',    classes:['Campus-Wide'], type:'', desc:'Follow W&L Men\'s Baseball online for the up to date schedule and game results. ODAC Opening Series details will be updated the week of April 27.'},
   {id:62, title:"Men's Tennis vs ODAC Semifinals",                         location:'TBA',                                                     date:'Saturday, May 2',     start:'TBA',     end:'',         cat:'sport',    classes:['Campus-Wide'], type:'', desc:'Follow W&L Men\'s Tennis online for the up to date schedule and game results. ODAC tournament details will be updated the week of April 27.'},
@@ -580,7 +580,7 @@ let events = [
   {id:92, title:"Men's Tennis vs ODAC Semifinals",                         location:'TBA',                                                     date:'Saturday, May 2',     start:'11:00 AM',end:'',         cat:'sport',    classes:['Campus-Wide'], type:'', desc:'Follow W&L Men\'s Tennis online for the up to date schedule and game results. ODAC tournament details will be updated the week of April 27.'},
   {id:69, title:'Alumni Weekend Book Signing',                             location:'University Store',                                        date:'Saturday, May 2',     start:'12:00 PM',end:'2:00 PM',  cat:'featured', classes:['1981'],       type:'', desc:'Stop by the University Store along the patio facing Cannan Green for a special book signing. Jeff Reiter \'81 will be available to sign his book, The Best of Words on Birds. Copies are for sale. If other alumni authors are interested, please contact Nancy Trumps, ntrumps@wlu.edu.'},
   {id:70, title:"The President's Society Reception",                       location:'Lee House',                                               date:'Saturday, May 2',     start:'12:30 PM',end:'2:00 PM',  cat:'featured', classes:['1976','1981','1986','1991','1996','2001','2006'], type:'By Invitation Only', desc:'The President\'s Society is Washington and Lee\'s recognition club honoring our most outstanding donors to the W&L Fund.'},
-  {id:71, title:'25th Reunion Class Memorial Ceremony',                    location:'Near Wilson Field',                                       date:'Saturday, May 2',     start:'2:15 PM', end:'2:45 PM',  cat:'class',    classes:['2001'],       type:'', desc:'As you stroll through campus while visiting for Alumni Weekend, take a moment to stop by Michael Navalkowsky\'s memorial bench near Wilson Field, along with a memorial wreath to remember all deceased classmates. The Class of 2001 will gather to reflect and remember Colin Fitzgibbons, David Grossman, Michael Navalkowsky, Mark Raeder and Peer Segelke.'s memorial bench near Wilson Field, along with a memorial wreath to remember all deceased classmates. The Class of 2001 will gather to reflect and remember Colin Fitzgibbons, Michael Navalkowsky, Mark Raeder and Peer Segelke.'},
+  {id:71, title:'25th Reunion Class Memorial Ceremony',                    location:'Near Wilson Field',                                       date:'Saturday, May 2',     start:'2:15 PM', end:'2:45 PM',  cat:'class',    classes:['2001'],       type:'', desc:'As you stroll through campus while visiting for Alumni Weekend, take a moment to stop by Michael Navalkowsky\'s memorial bench near Wilson Field, along with a memorial wreath to remember all deceased classmates. The Class of 2001 will gather to reflect and remember Colin Fitzgibbons, David Grossman, Michael Navalkowsky, Mark Raeder and Peer Segelke.'},
   {id:72, title:'Class of 1976 Afternoon Gathering',                       location:'Rockbridge Vineyard and Brewery, Raphine, VA',            date:'Saturday, May 2',     start:'3:00 PM', end:'5:30 PM',  cat:'class',    classes:['1976'],       type:'', desc:'Shep \'76 and Jane Millott-Rouse, Rockbridge Vineyard and Brewery, 35 Hillview Rd, Raphine, VA 24472'},
   {id:73, title:'Class of 1981 Afternoon Gathering',                       location:'Jamie \'81 and Alison Small P\'15, 7 Kennedy Wades Mill Loop, Raphine, VA', date:'Saturday, May 2', start:'3:00 PM', end:'5:30 PM', cat:'class', classes:['1981'], type:'', desc:''},
   {id:74, title:'Class of 1986 Afternoon Gathering',                       location:'Jamie \'81 and Alison Small P\'15, 7 Kennedy Wades Mill Loop, Raphine, VA', date:'Saturday, May 2', start:'3:00 PM', end:'5:30 PM', cat:'class', classes:['1986'], type:'', desc:''},
@@ -659,7 +659,7 @@ function buildCatPills() {
     { key:'affinity', label:'Affinity',        activeClass:'p-cat-affinity' },
     { key:'fitness',  label:'Fitness',         activeClass:'p-cat-fitness'  },
     { key:'sport',    label:'Sporting Events', activeClass:'p-cat-sport'    },
-    { key:'allday',   label:'All Day',         activeClass:'p-cat-allday'   },
+    { key:'allday',   label:'Other',         activeClass:'p-cat-allday'   },
   ];
   cats.forEach(({ key, label, activeClass: ac }) => {
     c.appendChild(mkPill(label, activeCat === key, ac, () => setCat(key)));
@@ -772,11 +772,11 @@ function renderCard(e) {
   const classTags = e.classes
     .map(c => {
       if (c === 'All Alumni')   return `<span class="ctag ctag-allalum">All alumni</span>`;
-      if (c === 'Campus-Wide')  return `<span class="ctag ctag-opentoall">Campus-wide</span>`;
+      if (c === 'Campus-Wide')  return '';
       return `<span class="ctag ctag-classyr">Class of ${c}</span>`;
     })
     .join('');
-  const catTag  = `<span class="ctag ${meta.tag}">${meta.label}</span>`;
+  const catTag  = e.cat === 'allday' ? '' : `<span class="ctag ${meta.tag}">${meta.label}</span>`;
   const typeTag = e.type ? `<span class="ctag ctag-sub">${e.type}</span>` : '';
 
   return `<div class="event-card" id="card-${e.id}">
