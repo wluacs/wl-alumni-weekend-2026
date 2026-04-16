@@ -137,6 +137,13 @@ body.public-mode .admin-panel { display: none !important; }
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); }
 .legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
 
+.cal-export-btn {
+  font-size: 13px; padding: 6px 14px; border-radius: var(--r-sm);
+  border: 1.5px solid var(--sky); background: var(--sky-pale); color: var(--navy);
+  cursor: pointer; font-family: var(--sans); transition: all 0.13s; white-space: nowrap;
+}
+.cal-export-btn:hover { background: var(--sky-light); border-color: var(--c-featured-dk); }
+
 /* ═══════════════════════════════════════
    DAY GROUP
 ═══════════════════════════════════════ */
@@ -462,6 +469,11 @@ body.public-mode .admin-panel { display: none !important; }
     <div class="legend-item"><div class="legend-dot" style="background:#5C6F6F"></div>Fitness</div>
     <div class="legend-item"><div class="legend-dot" style="background:#F8EACB; border:1px solid #d4c090;"></div>Sporting</div>
     <div class="legend-item"><div class="legend-dot" style="background:#8E3530"></div>Other</div>
+    <div style="margin-left:auto;">
+      <button class="cal-export-btn" onclick="exportCalendar()" id="calBtn">
+        <svg style="width:14px;height:14px;vertical-align:-2px;margin-right:5px;" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="16" height="14" rx="2"/><path d="M2 8h16M6 2v4M14 2v4"/></svg>Add to Calendar
+      </button>
+    </div>
   </div>
 
   <!-- SCHEDULE -->
@@ -1008,6 +1020,95 @@ function copyText(text, btn) {
   navigator.clipboard.writeText(text).then(()=>{ btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy',2000); });
 }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── CALENDAR EXPORT (ICS) ── */
+function exportCalendar() {
+  const evs = visibleEvents();
+  if (!evs.length) { alert('No events to export for the current filter.'); return; }
+
+  // Map date strings to 2026 dates
+  const DATE_MAP = {
+    'Thursday, April 30': '20260430',
+    'Friday, May 1':      '20260501',
+    'Saturday, May 2':    '20260502',
+    'Sunday, May 3':      '20260503',
+  };
+
+  function toICSTime(dateStr, timeStr) {
+    const ymd = DATE_MAP[dateStr];
+    if (!ymd) return null;
+    if (!timeStr || timeStr === 'TBA') return ymd; // all-day fallback
+    const m = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+    if (!m) return ymd;
+    let h = parseInt(m[1]), min = parseInt(m[2]);
+    const isPM = m[3].toUpperCase() === 'PM';
+    if (isPM && h !== 12) h += 12;
+    if (!isPM && h === 12) h = 0;
+    return ymd + 'T' + String(h).padStart(2,'0') + String(min).padStart(2,'0') + '00';
+  }
+
+  function icsEscape(s) {
+    return (s || '').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n').replace(/<[^>]+>/g,'');
+  }
+
+  function uid(id) {
+    return 'aw26-event-' + id + '@wlu.edu';
+  }
+
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//W&L Alumni Engagement//Alumni Weekend 2026//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:PUBLISH',
+    'X-WR-CALNAME:W&L Alumni Weekend 2026',
+    'X-WR-TIMEZONE:America/New_York',
+  ];
+
+  evs.forEach(e => {
+    const dtstart = toICSTime(e.date, e.start);
+    const dtend   = toICSTime(e.date, e.end) || dtstart;
+    if (!dtstart) return;
+
+    const isAllDay = !e.start || e.start === 'TBA' || !dtstart.includes('T');
+    const loc = icsEscape(e.location);
+    const desc = icsEscape(e.desc + (e.type ? ' [' + e.type + ']' : ''));
+
+    lines.push('BEGIN:VEVENT');
+    lines.push('UID:' + uid(e.id));
+    if (isAllDay) {
+      lines.push('DTSTART;VALUE=DATE:' + dtstart.slice(0,8));
+      lines.push('DTEND;VALUE=DATE:' + dtstart.slice(0,8));
+    } else {
+      lines.push('DTSTART;TZID=America/New_York:' + dtstart);
+      lines.push('DTEND;TZID=America/New_York:' + (dtend.includes('T') ? dtend : dtstart));
+    }
+    lines.push('SUMMARY:' + icsEscape(e.title));
+    if (loc)  lines.push('LOCATION:' + loc);
+    if (desc) lines.push('DESCRIPTION:' + desc);
+    lines.push('END:VEVENT');
+  });
+
+  lines.push('END:VCALENDAR');
+
+  const blob = new Blob([lines.join('\r\n')], { type: 'text/calendar;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+
+  // Build a meaningful filename based on active filters
+  let fname = 'WL-Alumni-Weekend-2026';
+  if (activeClass !== 'all') fname += '-Class-of-' + activeClass;
+  if (activeDay   !== 'all') fname += '-' + activeDay.replace(/[^a-z0-9]/gi, '-');
+  a.href = url; a.download = fname + '.ics';
+  a.click();
+  URL.revokeObjectURL(url);
+
+  // Button feedback
+  const btn = document.getElementById('calBtn');
+  const orig = btn.innerHTML;
+  btn.textContent = 'Downloaded!';
+  setTimeout(() => { btn.innerHTML = orig; }, 2000);
+}
 
 init();
 </script>
