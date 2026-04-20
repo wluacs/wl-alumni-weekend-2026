@@ -366,8 +366,90 @@ body.public-mode .admin-panel { display: none !important; }
 .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-muted); font-size: 16px; }
 
 /* ═══════════════════════════════════════
-   MOBILE
+   TAB BAR — pill style
 ═══════════════════════════════════════ */
+.tab-bar {
+  display: flex; gap: 8px;
+  margin-bottom: 1.25rem;
+}
+.tab-btn {
+  padding: 8px 18px; font-size: 14px; font-weight: 500;
+  border: 1.5px solid var(--border); background: var(--card);
+  cursor: pointer; color: var(--text-muted); font-family: var(--sans);
+  border-radius: 24px; transition: all 0.13s; white-space: nowrap;
+}
+.tab-btn:hover { border-color: var(--sky); color: var(--navy); }
+.tab-btn.tab-active { background: var(--navy); color: #fff; border-color: var(--navy); }
+.tab-btn.tab-transport { border-color: var(--crimson); color: var(--crimson); }
+.tab-btn.tab-transport svg { stroke: var(--crimson); }
+.tab-btn.tab-transport:hover { background: var(--crimson-bg); }
+.tab-btn.tab-transport.tab-active { background: var(--crimson); color: #fff; border-color: var(--crimson); }
+.tab-btn.tab-transport.tab-active svg { stroke: #fff; }
+
+/* compact filter bar */
+.filters-compact { gap: 10px; }
+.filter-row-selects { gap: 16px; flex-wrap: wrap; }
+.filter-select-group { display: flex; align-items: center; gap: 8px; }
+.filter-select {
+  padding: 6px 28px 6px 10px; font-size: 14px; font-family: var(--sans);
+  border: 1.5px solid var(--border); border-radius: var(--r-sm);
+  background: var(--card); color: var(--text-mid); cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 9px center;
+  transition: border-color 0.13s;
+}
+.filter-select:hover { border-color: var(--sky); }
+.filter-select:focus { outline: none; border-color: var(--c-featured-dk); }
+.filter-select.select-active { border-color: var(--c-class); color: var(--navy); font-weight: 500; }
+
+/* ═══════════════════════════════════════
+   TRANSPORTATION PANEL
+═══════════════════════════════════════ */
+.transport-wrap { display: flex; flex-direction: column; gap: 1.5rem; }
+.transport-note {
+  display: flex; align-items: flex-start; gap: 4px;
+  background: var(--sky-pale); border: 1px solid var(--sky-light);
+  border-radius: var(--r-md); padding: 12px 16px;
+  font-size: 14px; color: var(--navy-mid); line-height: 1.55;
+}
+.transport-day { background: var(--card); border: 1px solid var(--border-lt); border-radius: var(--r-lg); overflow: hidden; }
+.transport-day-heading {
+  font-family: var(--serif); font-size: 18px; font-weight: normal;
+  color: #fff; background: var(--navy);
+  padding: 12px 18px;
+}
+.transport-table { display: flex; flex-direction: column; }
+.tr-row {
+  display: grid; grid-template-columns: 160px 1fr;
+  gap: 12px; padding: 12px 18px;
+  border-bottom: 1px solid var(--border-lt); align-items: start;
+}
+.tr-row:last-child { border-bottom: none; }
+.tr-row.tr-highlight { background: #fdf6e8; }
+.tr-time {
+  font-size: 13px; font-weight: 600; color: var(--navy);
+  padding-top: 1px; line-height: 1.4;
+}
+.tr-desc { font-size: 14px; color: var(--text-mid); line-height: 1.55; }
+.transport-hotels {
+  background: var(--card); border: 1px solid var(--border-lt);
+  border-radius: var(--r-lg); padding: 18px 20px;
+}
+.transport-hotels-heading {
+  font-size: 13px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-muted); margin-bottom: 12px;
+}
+.transport-hotels-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 6px 16px;
+}
+.transport-hotels-grid span { font-size: 13px; color: var(--text-mid); }
+
+@media (max-width: 580px) {
+  .tr-row { grid-template-columns: 1fr; gap: 4px; }
+  .tr-time { font-size: 12px; }
+}
 @media (max-width: 580px) {
   .form-grid, .form-grid.three { grid-template-columns: 1fr; }
   .card-title { font-size: 15px; }
@@ -443,22 +525,46 @@ body.public-mode .admin-panel { display: none !important; }
     </div>
   </div>
 
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab-btn tab-active" id="tab-schedule" onclick="switchTab('schedule')">
+      <svg style="width:13px;height:13px;vertical-align:-1px;margin-right:5px;" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="3" width="16" height="14" rx="2"/><path d="M6 7h8M6 10h8M6 13h5"/></svg>
+      Event Schedule
+    </button>
+    <button class="tab-btn tab-transport" id="tab-transportation" onclick="switchTab('transportation')">
+      <svg style="width:13px;height:13px;vertical-align:-1px;margin-right:5px;" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="16" height="9" rx="2"/><path d="M5 7V5a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v2"/><circle cx="6" cy="16" r="1.5"/><circle cx="14" cy="16" r="1.5"/></svg>
+      Transportation
+    </button>
+  </div>
+
+  <!-- SCHEDULE PANEL -->
+  <div id="panel-schedule">
+
   <!-- FILTER BARS -->
-  <div class="filters-wrap">
-    <!-- Day filter -->
+  <div class="filters-wrap filters-compact">
     <div class="filter-row">
       <span class="filter-row-label">Day</span>
       <div class="pill-group" id="dayPills"></div>
     </div>
-    <!-- Class filter -->
-    <div class="filter-row">
-      <span class="filter-row-label">Class</span>
-      <div class="pill-group" id="classPills"></div>
-    </div>
-    <!-- Category filter -->
-    <div class="filter-row">
-      <span class="filter-row-label">Type</span>
-      <div class="pill-group" id="catPills"></div>
+    <div class="filter-row filter-row-selects">
+      <div class="filter-select-group">
+        <label class="filter-row-label" for="classSelect">Class</label>
+        <select id="classSelect" class="filter-select" onchange="setClass(this.value)">
+          <option value="all">All classes</option>
+        </select>
+      </div>
+      <div class="filter-select-group">
+        <label class="filter-row-label" for="catSelect">Type</label>
+        <select id="catSelect" class="filter-select" onchange="setCat(this.value)">
+          <option value="all">All types</option>
+          <option value="featured">Featured</option>
+          <option value="class">Class Specific</option>
+          <option value="affinity">Affinity</option>
+          <option value="fitness">Fitness</option>
+          <option value="sport">Sporting Events</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -478,6 +584,122 @@ body.public-mode .admin-panel { display: none !important; }
 
   <!-- SCHEDULE -->
   <div id="schedule"></div>
+
+  </div><!-- end panel-schedule -->
+
+  <!-- TRANSPORTATION PANEL -->
+  <div id="panel-transportation" style="display:none;">
+    <div class="transport-wrap">
+
+      <div class="transport-note">
+        <svg style="width:15px;height:15px;vertical-align:-2px;margin-right:5px;flex-shrink:0;" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="10" cy="10" r="8"/><path d="M10 9v5M10 6.5v.5"/></svg>
+        All shuttles depart from and return to <strong>Evans Hall</strong> unless otherwise noted. For rides to B&Bs, Airbnbs, or downtown Lexington, contact <strong>Blue Ridge Outdoor School</strong> at (540) 960-0931.
+      </div>
+
+      <div class="transport-day">
+        <div class="transport-day-heading">Thursday, April 30</div>
+        <div class="transport-table">
+          <div class="tr-row">
+            <div class="tr-time">Noon – 8:00 PM</div>
+            <div class="tr-desc">Shuttles loop from hotels to campus. Drop-off and pickup at Evans Hall.</div>
+          </div>
+          <div class="tr-row">
+            <div class="tr-time">9:30 – 11:30 PM</div>
+            <div class="tr-desc">Shuttles loop from Hotchkiss Alumni House and Evans Hall back to hotels.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="transport-day">
+        <div class="transport-day-heading">Friday, May 1</div>
+        <div class="transport-table">
+          <div class="tr-row">
+            <div class="tr-time">8:00 AM – 4:00 PM</div>
+            <div class="tr-desc">Shuttles loop from hotels to campus. Drop-off and pickup at Evans Hall.</div>
+          </div>
+          <div class="tr-row">
+            <div class="tr-time">4:00 – 7:30 PM</div>
+            <div class="tr-desc">Shuttles loop from hotels to campus with drop-offs at Evans Hall, Wilson Field, and Law School Lawn.</div>
+          </div>
+          <div class="tr-row tr-highlight">
+            <div class="tr-time">4:30 – 6:30 PM</div>
+            <div class="tr-desc"><strong>Hampton Inn dedicated shuttle</strong> loops from hotel to Evans Hall.</div>
+          </div>
+          <div class="tr-row">
+            <div class="tr-time">9:00 PM – Midnight</div>
+            <div class="tr-desc">Shuttles loop from Law School Lawn and Evans Hall back to local hotels.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="transport-day">
+        <div class="transport-day-heading">Saturday, May 2</div>
+        <div class="transport-table">
+          <div class="tr-row">
+            <div class="tr-time">9:00 AM – 1:00 PM</div>
+            <div class="tr-desc">Shuttles loop from hotels to campus. Drop-off and pickup at Evans Hall.</div>
+          </div>
+          <div class="tr-row tr-highlight">
+            <div class="tr-time">2:20 PM SHARP</div>
+            <div class="tr-desc"><strong>One-way shuttle to Rockbridge Vineyard &amp; Brewery</strong> (35 Hillview Rd, Raphine) for the Class of 1976 Afternoon Gathering. One trip only — bus will be labeled.</div>
+          </div>
+          <div class="tr-row tr-highlight">
+            <div class="tr-time">2:20 PM SHARP</div>
+            <div class="tr-desc"><strong>One-way shuttle to Jamie Small's Farm</strong> (7 Kennedy Wades Mill Loop, Raphine) for the Class of 1981 &amp; 1986 Afternoon Gathering. One trip only — bus will be labeled.</div>
+          </div>
+          <div class="tr-row">
+            <div class="tr-time">2:45 – 5:45 PM</div>
+            <div class="tr-desc">Shuttles from Evans Hall to Stonegate Inn (35th), The Livery (30th), and Law School Lawn (25th). Shuttles will loop.</div>
+          </div>
+          <div class="tr-row">
+            <div class="tr-time">5:45 – 8:00 PM</div>
+            <div class="tr-desc">Shuttles loop from hotels to campus. Drop-off and pickup at Evans Hall.</div>
+          </div>
+          <div class="tr-row tr-highlight">
+            <div class="tr-time">5:50 PM SHARP</div>
+            <div class="tr-desc"><strong>One-way return shuttle from Rockbridge Vineyard &amp; Brewery</strong> to Evans Hall. One trip only — bus will be labeled.</div>
+          </div>
+          <div class="tr-row tr-highlight">
+            <div class="tr-time">5:50 PM SHARP</div>
+            <div class="tr-desc"><strong>One-way return shuttle from Jamie Small's Farm</strong> to Evans Hall. One trip only — bus will be labeled.</div>
+          </div>
+          <div class="tr-row">
+            <div class="tr-time">9:00 PM – Midnight</div>
+            <div class="tr-desc">Shuttles loop from Law School Lawn and Evans Hall back to local hotels. Last shuttle departs at midnight.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="transport-day">
+        <div class="transport-day-heading">Additional Shuttle Service</div>
+        <div class="transport-table">
+          <div class="tr-row">
+            <div class="tr-time">Blue Ridge Outdoor School</div>
+            <div class="tr-desc">Safe-ride service to B&Bs, Airbnbs, VRBOs, and downtown Lexington. Call <strong>(540) 960-0931</strong>. Located at Evans Hall for pickup and drop-off.<br><em>Thu 7 PM – Midnight &nbsp;·&nbsp; Fri &amp; Sat 3 PM – Midnight</em></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="transport-hotels">
+        <div class="transport-hotels-heading">Participating Hotels</div>
+        <div class="transport-hotels-grid">
+          <span>Best Western Plus Inn at Hunt Ridge</span>
+          <span>Best Western Lexington Inn</span>
+          <span>Sleep Inn &amp; Suites Virginia Horse Center</span>
+          <span>Comfort Inn Virginia Horse Center</span>
+          <span>Country Inn &amp; Suites by Radisson</span>
+          <span>Hampton Inn</span>
+          <span>Holiday Inn Express</span>
+          <span>Motel 6</span>
+          <span>Spark</span>
+          <span>Super 8</span>
+          <span>Tru by Hilton</span>
+          <span>Wingate by Wyndham</span>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end panel-transportation -->
 </div>
 
 <!-- JSON MODAL -->
@@ -621,6 +843,16 @@ const WORKER_URL = 'https://aw26schedule.tmeeker.workers.dev/';
 
 function getParam(k) { return new URLSearchParams(window.location.search).get(k); }
 
+/* ── TAB SWITCHER ── */
+function switchTab(tab) {
+  document.getElementById('panel-schedule').style.display       = tab === 'schedule'      ? '' : 'none';
+  document.getElementById('panel-transportation').style.display  = tab === 'transportation' ? '' : 'none';
+  const sBtn = document.getElementById('tab-schedule');
+  const tBtn = document.getElementById('tab-transportation');
+  sBtn.classList.toggle('tab-active', tab === 'schedule');
+  tBtn.classList.toggle('tab-active', tab === 'transportation');
+}
+
 /* ── MONDAY COLUMN MAP ──
    Column IDs confirmed from live board response. */
 function parseMonday(data) {
@@ -710,31 +942,24 @@ function buildDayPills() {
 }
 
 function buildClassPills() {
-  const c = document.getElementById('classPills');
-  c.innerHTML = '';
-  const allBtn = mkPill('All classes', activeClass === 'all', 'p-all-active', () => setClass('all'));
-  c.appendChild(allBtn);
+  const sel = document.getElementById('classSelect');
+  if (!sel) return;
+  sel.innerHTML = '<option value="all">All classes</option>';
   REUNION_CLASSES.forEach(yr => {
-    const btn = mkPill('Class of ' + yr, activeClass === yr, 'p-class-active', () => setClass(yr));
-    c.appendChild(btn);
+    const opt = document.createElement('option');
+    opt.value = yr; opt.textContent = 'Class of ' + yr;
+    if (activeClass === yr) opt.selected = true;
+    sel.appendChild(opt);
   });
+  if (activeClass === 'all') sel.value = 'all';
+  sel.classList.toggle('select-active', activeClass !== 'all');
 }
 
 function buildCatPills() {
-  const c = document.getElementById('catPills');
-  c.innerHTML = '';
-  c.appendChild(mkPill('All types', activeCat === 'all', 'p-all-active', () => setCat('all')));
-  const cats = [
-    { key:'featured', label:'Featured',       activeClass:'p-cat-featured' },
-    { key:'class',    label:'Class Specific',  activeClass:'p-cat-class'    },
-    { key:'affinity', label:'Affinity',        activeClass:'p-cat-affinity' },
-    { key:'fitness',  label:'Fitness',         activeClass:'p-cat-fitness'  },
-    { key:'sport',    label:'Sporting Events', activeClass:'p-cat-sport'    },
-    { key:'other',    label:'Other',         activeClass:'p-cat-allday'   },
-  ];
-  cats.forEach(({ key, label, activeClass: ac }) => {
-    c.appendChild(mkPill(label, activeCat === key, ac, () => setCat(key)));
-  });
+  const sel = document.getElementById('catSelect');
+  if (!sel) return;
+  sel.value = activeCat;
+  sel.classList.toggle('select-active', activeCat !== 'all');
 }
 
 function mkPill(label, active, activeClass, fn) {
