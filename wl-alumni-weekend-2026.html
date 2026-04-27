@@ -385,6 +385,12 @@ body.public-mode .admin-panel { display: none !important; }
 .tab-btn.tab-transport:hover { background: var(--crimson-bg); }
 .tab-btn.tab-transport.tab-active { background: var(--crimson); color: #fff; border-color: var(--crimson); }
 .tab-btn.tab-transport.tab-active svg { stroke: #fff; }
+.tab-btn.tab-map {
+  border-color: var(--teal-dark); color: var(--teal-dark);
+  text-decoration: none; display: inline-flex; align-items: center;
+}
+.tab-btn.tab-map svg { stroke: var(--teal-dark); }
+.tab-btn.tab-map:hover { background: #e6f2f5; border-color: var(--teal-dark); color: var(--teal-dark); }
 
 /* compact filter bar */
 .filters-compact { gap: 10px; }
@@ -536,6 +542,11 @@ body.public-mode .admin-panel { display: none !important; }
       <svg style="width:13px;height:13px;vertical-align:-1px;margin-right:5px;" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="16" height="9" rx="2"/><path d="M5 7V5a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v2"/><circle cx="6" cy="16" r="1.5"/><circle cx="14" cy="16" r="1.5"/></svg>
       Transportation
     </button>
+    <a class="tab-btn tab-map" href="https://wlualumni.events/s/2026-AW-Map-FINAL.pdf" target="_blank" rel="noopener">
+      <svg style="width:13px;height:13px;vertical-align:-1px;margin-right:5px;" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4l5 2 6-2 5 2v12l-5-2-6 2-5-2V4z"/><path d="M7 6v12M13 4v12"/></svg>
+      Campus Map
+      <svg style="width:10px;height:10px;vertical-align:-1px;margin-left:3px;opacity:0.7;" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 3h10v10M17 3L8 12"/></svg>
+    </a>
   </div>
 
   <!-- SCHEDULE PANEL -->
