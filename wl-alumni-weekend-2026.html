@@ -884,7 +884,11 @@ function parseMonday(data) {
       const start    = (cv['text_mm26ew9e'] || '').trim();
       const end      = (cv['text_mm26es9f'] || '').trim();
       const location = (cv['text_mm26akqn'] || '').trim();
-      const cat      = (cv['dropdown_mm26zmmb'] || 'featured').trim().toLowerCase().replace(/\s+/g, '-');
+      const catRaw   = (cv['dropdown_mm26zmmb'] || 'featured').trim().toLowerCase();
+      // Monday may return multiple values comma-separated e.g. "featured, family"
+      const catParts = catRaw.split(',').map(s => s.trim().replace(/\s+/g,'-')).filter(Boolean);
+      const family   = catParts.includes('family');
+      const cat      = catParts.find(c => c !== 'family') || catParts[0] || 'featured';
       const classes  = (cv['text_mm264cbe'] || 'Campus-Wide').trim();
       const subLabel = (cv['text_mm26ef43'] || '').trim();
       const desc     = (cv['text_mm26trg4'] || '').trim();
@@ -895,6 +899,7 @@ function parseMonday(data) {
         id: idx + 1,
         title, date, start, end, location,
         cat: cat || 'featured',
+        family,
         classes: classArr.length ? classArr : ['Campus-Wide'],
         type: subLabel,
         desc,
@@ -1014,12 +1019,12 @@ function setCat(cat) {
 function visibleEvents() {
   return events.filter(e => {
     const dayOk = activeDay === 'all' || e.date === activeDay;
-    const catOk = activeCat === 'all' || e.cat === activeCat;
+    const catOk = activeCat === 'all'
+      || (activeCat === 'family' ? e.family || e.cat === 'family' : e.cat === activeCat);
     let classOk;
     if (activeClass === 'all') {
       classOk = true;
     } else {
-      // Class filter — only show All Alumni or that specific class; NOT Campus-Wide
       classOk = e.classes.includes('All Alumni') || e.classes.includes(activeClass);
     }
     return dayOk && catOk && classOk;
@@ -1089,6 +1094,7 @@ function renderCard(e) {
     })
     .join('');
   const catTag  = e.cat === 'other' ? '' : `<span class="ctag ${meta.tag}">${meta.label}</span>`;
+  const famTag  = (e.family && e.cat !== 'family') ? `<span class="ctag ctag-family">Family Friendly</span>` : '';
   const typeTag = e.type ? `<span class="ctag ctag-sub">${e.type}</span>` : '';
 
   return `<div class="event-card" id="card-${e.id}">
@@ -1106,7 +1112,7 @@ function renderCard(e) {
         ${loc ? `<div class="card-meta-item">${ICON_PIN} ${loc}</div>` : ''}
       </div>
       ${desc}
-      <div class="card-tags">${classTags}${catTag}${typeTag}</div>
+      <div class="card-tags">${classTags}${catTag}${famTag}${typeTag}</div>
     </div>
   </div>`;
 }
