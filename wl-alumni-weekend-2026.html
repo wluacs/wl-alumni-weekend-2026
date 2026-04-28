@@ -884,8 +884,7 @@ function parseMonday(data) {
       const start    = (cv['text_mm26ew9e'] || '').trim();
       const end      = (cv['text_mm26es9f'] || '').trim();
       const location = (cv['text_mm26akqn'] || '').trim();
-      const catRaw   = (cv['dropdown_mm26zmmb'] || 'featured').trim().toLowerCase();
-      const cat      = catRaw === 'family-friendly' ? 'family' : catRaw;
+      const cat      = (cv['dropdown_mm26zmmb'] || 'featured').trim().toLowerCase().replace(/\s+/g, '-');
       const classes  = (cv['text_mm264cbe'] || 'Campus-Wide').trim();
       const subLabel = (cv['text_mm26ef43'] || '').trim();
       const desc     = (cv['text_mm26trg4'] || '').trim();
