@@ -126,6 +126,7 @@ body.public-mode .admin-panel { display: none !important; }
 .pill.p-cat-fitness  { background: var(--c-fitness);     color: #fff; border-color: var(--c-fitness);     font-weight: 500; }
 .pill.p-cat-sport    { background: var(--c-sport-dk);    color: #fff; border-color: var(--c-sport-dk);    font-weight: 500; }
 .pill.p-cat-allday   { background: var(--c-allday);      color: #fff; border-color: var(--c-allday);      font-weight: 500; }
+.pill.p-cat-family  { background: #2e7d5e;             color: #fff; border-color: #2e7d5e;             font-weight: 500; }
 
 /* ═══════════════════════════════════════
    LEGEND
@@ -515,6 +516,7 @@ body.public-mode .admin-panel { display: none !important; }
           <option value="fitness">Fitness (T)</option>
           <option value="sport">Sporting Event (S)</option>
           <option value="other">Other</option>
+          <option value="family">Family Friendly</option>
         </select>
       </div>
       <div class="form-field"><label>Sub-label / note (optional)</label><input id="f-type" placeholder="e.g. By Invitation Only" /></div>
@@ -569,12 +571,13 @@ body.public-mode .admin-panel { display: none !important; }
         <label class="filter-row-label" for="catSelect">Type</label>
         <select id="catSelect" class="filter-select" onchange="setCat(this.value)">
           <option value="all">All types</option>
-          <option value="featured">Featured</option>
-          <option value="class">Class Specific</option>
           <option value="affinity">Affinity</option>
+          <option value="class">Class Specific</option>
+          <option value="family">Family Friendly</option>
+          <option value="featured">Featured</option>
           <option value="fitness">Fitness</option>
-          <option value="sport">Sporting Events</option>
           <option value="other">Other</option>
+          <option value="sport">Sporting Events</option>
         </select>
       </div>
     </div>
@@ -747,6 +750,7 @@ const CAT = {
   fitness:  { label:'Fitness',        hd:'hd-fitness',  tag:'ctag-fitness'  },
   sport:    { label:'Sporting Event', hd:'hd-sport',    tag:'ctag-sport'    },
   other:    { label:'Other',        hd:'hd-allday', tag:'ctag-allday'   },
+  family:   { label:'Family Friendly', hd:'hd-family', tag:'ctag-family'   },
 };
 
 let events = [
@@ -880,7 +884,8 @@ function parseMonday(data) {
       const start    = (cv['text_mm26ew9e'] || '').trim();
       const end      = (cv['text_mm26es9f'] || '').trim();
       const location = (cv['text_mm26akqn'] || '').trim();
-      const cat      = (cv['dropdown_mm26zmmb'] || 'featured').trim().toLowerCase();
+      const catRaw   = (cv['dropdown_mm26zmmb'] || 'featured').trim().toLowerCase();
+      const cat      = catRaw === 'family-friendly' ? 'family' : catRaw;
       const classes  = (cv['text_mm264cbe'] || 'Campus-Wide').trim();
       const subLabel = (cv['text_mm26ef43'] || '').trim();
       const desc     = (cv['text_mm26trg4'] || '').trim();
