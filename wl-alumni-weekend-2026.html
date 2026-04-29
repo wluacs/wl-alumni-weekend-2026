@@ -1273,7 +1273,6 @@ function exportCalendar() {
   const evs = visibleEvents();
   if (!evs.length) { alert('No events to export for the current filter.'); return; }
 
-  // Map date strings to 2026 dates
   const DATE_MAP = {
     'Thursday, April 30': '20260430',
     'Friday, May 1':      '20260501',
@@ -1284,7 +1283,7 @@ function exportCalendar() {
   function toICSTime(dateStr, timeStr) {
     const ymd = DATE_MAP[dateStr];
     if (!ymd) return null;
-    if (!timeStr || timeStr === 'TBA') return ymd; // all-day fallback
+    if (!timeStr || timeStr === 'TBA') return ymd;
     const m = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
     if (!m) return ymd;
     let h = parseInt(m[1]), min = parseInt(m[2]);
@@ -1298,10 +1297,7 @@ function exportCalendar() {
     return (s || '').replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n').replace(/<[^>]+>/g,'');
   }
 
-  function uid(id) {
-    return 'aw26-event-' + id + '@wlu.edu';
-  }
-
+  // All dates fall in late April / early May 2026 — EDT (UTC-4) is in effect
   const lines = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
@@ -1310,6 +1306,24 @@ function exportCalendar() {
     'METHOD:PUBLISH',
     'X-WR-CALNAME:W&L Alumni Weekend 2026',
     'X-WR-TIMEZONE:America/New_York',
+    // Embed full VTIMEZONE block so all calendar apps handle ET correctly
+    'BEGIN:VTIMEZONE',
+    'TZID:America/New_York',
+    'BEGIN:STANDARD',
+    'DTSTART:19671029T020000',
+    'RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=11',
+    'TZOFFSETFROM:-0400',
+    'TZOFFSETTO:-0500',
+    'TZNAME:EST',
+    'END:STANDARD',
+    'BEGIN:DAYLIGHT',
+    'DTSTART:19870405T020000',
+    'RRULE:FREQ=YEARLY;BYDAY=2SU;BYMONTH=3',
+    'TZOFFSETFROM:-0500',
+    'TZOFFSETTO:-0400',
+    'TZNAME:EDT',
+    'END:DAYLIGHT',
+    'END:VTIMEZONE',
   ];
 
   evs.forEach(e => {
@@ -1318,17 +1332,22 @@ function exportCalendar() {
     if (!dtstart) return;
 
     const isAllDay = !e.start || e.start === 'TBA' || !dtstart.includes('T');
-    const loc = icsEscape(e.location);
+    const loc  = icsEscape(e.location);
     const desc = icsEscape(e.desc + (e.type ? ' [' + e.type + ']' : ''));
 
     lines.push('BEGIN:VEVENT');
-    lines.push('UID:' + uid(e.id));
+    lines.push('UID:aw26-event-' + e.id + '@wlu.edu');
     if (isAllDay) {
       lines.push('DTSTART;VALUE=DATE:' + dtstart.slice(0,8));
       lines.push('DTEND;VALUE=DATE:' + dtstart.slice(0,8));
     } else {
       lines.push('DTSTART;TZID=America/New_York:' + dtstart);
-      lines.push('DTEND;TZID=America/New_York:' + (dtend.includes('T') ? dtend : dtstart));
+      // If end time is missing or same as start, add 1 hour as default duration
+      const endTime = (e.end && e.end !== 'TBA' && dtend.includes('T')) ? dtend : (() => {
+        const h = parseInt(dtstart.slice(9,11)) + 1;
+        return dtstart.slice(0,9) + String(h).padStart(2,'0') + dtstart.slice(11);
+      })();
+      lines.push('DTEND;TZID=America/New_York:' + endTime);
     }
     lines.push('SUMMARY:' + icsEscape(e.title));
     if (loc)  lines.push('LOCATION:' + loc);
@@ -1342,7 +1361,6 @@ function exportCalendar() {
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
 
-  // Build a meaningful filename based on active filters
   let fname = 'WL-Alumni-Weekend-2026';
   if (activeClass !== 'all') fname += '-Class-of-' + activeClass;
   if (activeDay   !== 'all') fname += '-' + activeDay.replace(/[^a-z0-9]/gi, '-');
@@ -1350,7 +1368,6 @@ function exportCalendar() {
   a.click();
   URL.revokeObjectURL(url);
 
-  // Button feedback
   const btn = document.getElementById('calBtn');
   const orig = btn.innerHTML;
   btn.textContent = 'Downloaded!';
