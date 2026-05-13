@@ -1017,30 +1017,6 @@ function setCat(cat) {
 
 /* ── FILTER ── */
 function visibleEvents() {
-  // Current time in Eastern Time
-  const nowET = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
-
-  const DATE_MAP = {
-    'Thursday, April 30': '2026-04-30',
-    'Friday, May 1':      '2026-05-01',
-    'Saturday, May 2':    '2026-05-02',
-    'Sunday, May 3':      '2026-05-03',
-  };
-
-  function eventEndET(e) {
-    const ymd = DATE_MAP[e.date];
-    if (!ymd) return null;
-    const timeStr = (e.end && e.end !== 'TBA' && e.end !== '') ? e.end : e.start;
-    if (!timeStr || timeStr === 'TBA') return null;
-    const m = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
-    if (!m) return null;
-    let h = parseInt(m[1]), min = parseInt(m[2]);
-    const isPM = m[3].toUpperCase() === 'PM';
-    if (isPM && h !== 12) h += 12;
-    if (!isPM && h === 12) h = 0;
-    return new Date(`${ymd}T${String(h).padStart(2,'0')}:${String(min).padStart(2,'0')}:00`);
-  }
-
   return events.filter(e => {
     const dayOk = activeDay === 'all' || e.date === activeDay;
     const catOk = activeCat === 'all'
@@ -1051,9 +1027,7 @@ function visibleEvents() {
     } else {
       classOk = e.classes.includes('All Alumni') || e.classes.includes(activeClass);
     }
-    const endTime = eventEndET(e);
-    const notPast = !endTime || endTime > nowET;
-    return dayOk && catOk && classOk && notPast;
+    return dayOk && catOk && classOk;
   });
 }
 
